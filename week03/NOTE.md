@@ -1,6 +1,6 @@
 # 每周总结可以写在这里
 
-#JavaScript 中除了开发者自己可以实现的对象之外，还存在一类特殊的对象，这些对象由于内置了特殊的方法，所以无法有开发者自己实现，以下是一览
+# JavaScript 中除了开发者自己可以实现的对象之外，还存在一类特殊的对象，这些对象由于内置了特殊的方法，所以无法有开发者自己实现，以下是一览
       1.Function Object => [[call]]
       2.Array => [[length]]
       3.String => [[StringData]]
@@ -11,10 +11,10 @@
 
 # 课堂内容
 
-#Float
+# Float
     在确认各种数据结构在内存中的分布时，需要注意大端小端的问题
 
-#Expressions 表达式
+# Expressions 表达式
       四则运算的内部实现算法就是树
       Member
       a.b
@@ -54,7 +54,7 @@
     	Symbol
     	bigint
 
-->Completion Record
+# Completion Record
       [[type]]:normal, break, continue, return, throw
       [[value]]:Types
       [[target]]:label
@@ -115,7 +115,7 @@
         有var写在function范围内，至少写在变量第一次出现的地方，不要写在子结构里
         let, const全面代替var
 
-#Object
+# Object
       唯一标示性
       有状态
       行为->状态的改变
