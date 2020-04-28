@@ -1,15 +1,13 @@
 # 每周总结可以写在这里
 
-->JavaScript 中除了开发者自己可以实现的对象之外，还存在一类特殊的对象，
-这些对象由于内置了特殊的方法，所以无法有开发者自己实现，以下是一览
-对象 特殊方法
-Function Object [[call]]
-Array [[length]]
-String [[StringData]]
-Arguments [[ParameterMap]]
-Integer-Indexed [[ArrayLength]]
-Module Namespace [[IsExtensible]] [[PreventExtensions]]
-Immutable Prototype [[SetPrototypeOf]]
+->JavaScript 中除了开发者自己可以实现的对象之外，还存在一类特殊的对象，这些对象由于内置了特殊的方法，所以无法有开发者自己实现，以下是一览
+1.Function Object => [[call]]
+2.Array => [[length]]
+3.String => [[StringData]]
+4.Arguments => [[ParameterMap]]
+5.Integer-Indexed => [[ArrayLength]]
+6.Module Namespace => [[IsExtensible]] [[PreventExtensions]]
+7.Immutable Prototype => [[SetPrototypeOf]]
 
 # 课堂内容
 
