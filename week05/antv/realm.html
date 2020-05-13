@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Realm</title>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.1.0/build/g6.js"></script>
+
+    <script>
+      //Graph Data
+      const data = {
+        nodes: [],
+        edges: [],
+      }
+
+      // Find Object
+      var set = new Set()
+      var globalProperties = [
+        'eval',
+        'isFinite',
+        'isNaN',
+        'parseFloat',
+        'parseInt',
+        'decodeURI',
+        'decodeURIComponent',
+        'encodeURI',
+        'encodeURIComponent',
+        'Array',
+        'Date',
+        'RegExp',
+        'Promise',
+        'Proxy',
+        'Map',
+        'WeakMap',
+        'Set',
+        'WeakSet',
+        'Function',
+        'Boolean',
+        'String',
+        'Number',
+        'Symbol',
+        'Object',
+        'Error',
+        'EvalError',
+        'RangeError',
+        'ReferenceError',
+        'SyntaxError',
+        'TypeError',
+        'URIError',
+        'ArrayBuffer',
+        'SharedArrayBuffer',
+        'DataView',
+        'Float32Array',
+        'Float64Array',
+        'Int8Array',
+        'Int16Array',
+        'Int32Array',
+        'Uint8Array',
+        'Uint16Array',
+        'Uint32Array',
+        'Uint8ClampedArray',
+        'Atomics',
+        'JSON',
+        'Math',
+        'Reflect',
+      ]
+
+      var queue = []
+      globalProperties.forEach((o) => queue.push({ path: o, object: this[o] }))
+
+      var res = []
+
+      var current
+
+      while (queue.length) {
+        current = queue.shift()
+
+        if (set.has(current.object)) {
+          continue
+        }
+
+        set.add(current.object)
+
+        // Create Graph Node
+        data.nodes.push({
+          id: current.path,
+          size: 30,
+          label: current.path,
+        })
+
+        for (let p of Object.getOwnPropertyNames(current.object)) {
+          let d = Object.getOwnPropertyDescriptor(current.object, p)
+          if (
+            (d.value != null && typeof d.value === 'object') ||
+            typeof d.value === 'function'
+          ) {
+            res.push({
+              path: current.path.concat('.').concat(p),
+              object: d.value,
+            })
+
+            // Create Leaf Node
+            data.nodes.push({
+              id: current.path.concat('.').concat(p),
+              size: 15,
+              isLeaf: true,
+              label: p,
+            })
+
+            //Create Relation
+            data.edges.push({
+              source: current.path,
+              target: current.path.concat('.').concat(p),
+            })
+          }
+
+          if (d.get) {
+            res.push({
+              path: current.path.concat('.').concat(p).concat('.get'),
+              object: d.get,
+            })
+
+            // Create Leaf Node
+            data.nodes.push({
+              id: current.path.concat('.').concat(p).concat('.get'),
+              size: 15,
+              isLeaf: true,
+              label: p,
+            })
+
+            //Create Relation
+            data.edges.push({
+              source: current.path,
+              target: current.path.concat('.').concat(p).concat('.get'),
+            })
+          }
+          if (d.set) {
+            res.push({
+              path: current.path.concat('.').concat(p).concat('.set'),
+              object: d.set,
+            })
+
+            // Create Leaf Node
+            data.nodes.push({
+              id: current.path.concat('.').concat(p).concat('.set'),
+              size: 15,
+              isLeaf: true,
+              label: p,
+            })
+
+            //Create Relation
+            data.edges.push({
+              source: current.path,
+              target: current.path.concat('.').concat(p).concat('.set'),
+            })
+          }
+        }
+      }
+
+      const width = document.getElementById('container').scrollWidth
+      const height = document.getElementById('container').scrollHeight || 800
+      const graph = new G6.Graph({
+        container: 'container',
+        width,
+        height,
+        layout: {
+          type: 'force',
+          preventOverlap: true,
+        },
+        defaultNode: {
+          color: '#5B8FF9',
+          style: {
+            lineWidth: 2,
+            fill: '#C6E5FF',
+          },
+        },
+        defaultEdge: {
+          size: 1,
+          color: '#e2e2e2',
+        },
+      })
+
+      const nodes = data.nodes
+      graph.data({
+        nodes,
+        edges: data.edges.map(function (edge, i) {
+          edge.id = 'edge' + i
+          return Object.assign({}, edge)
+        }),
+      })
+      graph.render()
+
+      graph.on('node:dragstart', function (e) {
+        graph.layout()
+        refreshDragedNodePosition(e)
+      })
+      graph.on('node:drag', function (e) {
+        refreshDragedNodePosition(e)
+      })
+      graph.on('node:dragend', function (e) {
+        e.item.get('model').fx = null
+        e.item.get('model').fy = null
+      })
+
+      function refreshDragedNodePosition(e) {
+        const model = e.item.get('model')
+        model.fx = e.x
+        model.fy = e.y
+      }
+    </script>
+  </body>
+</html>
